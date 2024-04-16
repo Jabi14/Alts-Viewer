@@ -1,0 +1,6 @@
+config:
+  enable-kick: true
+  #Put 0 to not allow alts
+  allowed-alts: 2
+messages:
+  kick-message: ""

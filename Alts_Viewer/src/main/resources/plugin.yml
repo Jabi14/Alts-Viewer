@@ -1,0 +1,8 @@
+main: mc.jabi14.AltsViewer
+version: 1.0
+name: AltsViewer
+author: Jabi14
+
+commands:
+  alts:
+    description: Main command of altsviewer
