@@ -1,13 +1,11 @@
 package mc.jabi14;
 
 import mc.jabi14.config.MainConfigManager;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AltsManager{
     private AltsViewer plugin;
@@ -21,7 +19,6 @@ public class AltsManager{
         this.players = players.getConfigFile().getConfig();
     }
 
-    //Cuando entra en el else, se pone dos veces el nick
     public void addUser(Player player) {
         String ip = player.getAddress().getAddress().getHostAddress();
         int i = ip.lastIndexOf(".");
@@ -36,12 +33,9 @@ public class AltsManager{
         else{
             if(!ipList.get(ipResult).contains(player.getName())){
                 ipList.get(ipResult).add(player.getName());
-                List<String> jugadores = players.getStringList("players." + ipResult);
-                jugadores.add(player.getName());
-                players.set("players." + ipResult, jugadores);
+                players.set("players." + ipResult,  ipList.get(ipResult));
             }
-            // añadir un and mas para checkear si es un alt o no
-            if (ipList.get(ipResult).size() > config.getInt("config.allowed-alts")+1 && config.getBoolean("config.enable-kick")) player.kickPlayer("a");
+            if (ipList.get(ipResult).size() > config.getInt("config.allowed-alts")+1 && config.getBoolean("config.enable-kick") && ipList.get(ipResult).indexOf(player.getName())+1 > config.getInt("config.allowed-alts")+1) player.kickPlayer(this.config.getString("messages.kick-message"));
         }
         plugin.getPlayerConfigManager().getConfigFile().saveConfig();
     }
@@ -55,12 +49,11 @@ public class AltsManager{
             }
         }
     }
-    //No funciona
+
     private String loadInfoByNick(String nick){
-        for(String i: players.getStringList("players")){
-            for(String n: players.getStringList("players."+i)){
-                if (n.equals(nick)) return i;
-            }
+        ConfigurationSection players = this.players.getConfigurationSection("players");
+        for(Map.Entry<String, Object> entry : players.getValues(true).entrySet()){
+            if(this.players.getStringList("players."+entry.getKey()).contains(nick)) return entry.getKey();
         }
         return null;
     }
@@ -77,9 +70,6 @@ public class AltsManager{
     }
 
     private List<String> searchByIp(String ip){
-        int i = ip.lastIndexOf(".");
-        String ipResult = (i != -1) ? ip.substring(0, i) : ip;
-        ipResult += ".xx";
         loadInfo(ip);
         return ipList.getOrDefault(ip, null);
     }
