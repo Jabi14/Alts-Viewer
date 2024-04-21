@@ -19,11 +19,15 @@ public class AltsManager{
         this.players = players.getConfigFile().getConfig();
     }
 
-    public void addUser(Player player) {
-        String ip = player.getAddress().getAddress().getHostAddress();
+    public String formatIP(String ip){
         int i = ip.lastIndexOf(".");
         String ipResult = (i != -1) ? ip.substring(0, i) : ip;
-        ipResult += ".xx";
+        return ipResult += ".xx";
+    }
+
+    public void addUser(Player player) {
+        String ip = player.getAddress().getAddress().getHostAddress();
+        String ipResult = formatIP(ip);
         loadInfo(ipResult);
         if (!ipList.containsKey(ipResult)){
             ipList.put(ipResult,new ArrayList<>());

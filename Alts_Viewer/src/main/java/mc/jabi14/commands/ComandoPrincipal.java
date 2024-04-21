@@ -3,6 +3,7 @@ package mc.jabi14.commands;
 import mc.jabi14.AltsManager;
 import mc.jabi14.AltsViewer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,9 +15,9 @@ public class ComandoPrincipal implements CommandExecutor {
     private AltsViewer plugin;
     private AltsManager altsManager;
 
-    public ComandoPrincipal(AltsViewer plugin, AltsManager altsManager) {
+    public ComandoPrincipal(AltsViewer plugin) {
         this.plugin = plugin;
-        this.altsManager = altsManager;
+        this.altsManager = plugin.getAltsManager();
     }
 
     @Override
@@ -24,7 +25,7 @@ public class ComandoPrincipal implements CommandExecutor {
         if(!sender.isOp()) return true;
         if(args.length >=3) helpMenu(sender);
         else if(args.length == 0) {
-            sender.sendMessage(AltsViewer.prefix+"Use the command &b/alts help&f to see the commands.");
+            sender.sendMessage(AltsViewer.prefix+"Use the command "+ ChatColor.AQUA+"/alts help"+ChatColor.WHITE+" to see the commands.");
             return true;
         }
         else if(args[0].equalsIgnoreCase("help")){
@@ -35,7 +36,7 @@ public class ComandoPrincipal implements CommandExecutor {
             plugin.getMainConfigManager().reloadConfig();
         }
         else if (args[0].equalsIgnoreCase("view")) {
-            if(args[1] == null) sender.sendMessage(AltsViewer.prefix+"Usage: &b/alts view <player>");
+            if(args[1] == null) sender.sendMessage(AltsViewer.prefix+"Usage: "+ChatColor.AQUA+"/alts view <player>");
             else{
                 List<String> alts = altsManager.getAlts(args[1],false);
                 if(alts != null && alts.size() > 1) alts.remove(args[1]);
@@ -52,11 +53,10 @@ public class ComandoPrincipal implements CommandExecutor {
             return true;
         }
         else if(args[0].equalsIgnoreCase("ipview")) {
-            if(args[1] == null) sender.sendMessage(AltsViewer.prefix+"Usage: &b/alts view <player>");
+            if(args[1] == null) sender.sendMessage(AltsViewer.prefix+"Usage: "+ChatColor.AQUA+"/alts view <player>");
             else{
-                int i = args[1].lastIndexOf(".");
-                String ipResult = (i != -1) ? (args[1].substring(0, i)) : (args[1]);
-                ipResult += ".xx";
+                String ipResult = altsManager.formatIP(args[1]);
+
                 List<String> alts = altsManager.getAlts(ipResult,true);
                 if(alts == null){
                     sender.sendMessage(AltsViewer.prefix+"No alts found");
@@ -88,11 +88,11 @@ public class ComandoPrincipal implements CommandExecutor {
     }
 
     public void helpMenu(CommandSender sender){
-        sender.sendMessage("&b<---------------- "+AltsViewer.prefix+" ---------------->");
-        sender.sendMessage("&b/alts view <player> &fCheck player alts");
-        sender.sendMessage("&b/alts ipview <ip> &fCheck accounts with that ip");
-        sender.sendMessage("&b/alts <player> &f Check player info");
-        sender.sendMessage("&b/alts reload &f reload config");
-        sender.sendMessage("&b<-------------------------------->");
+        sender.sendMessage(ChatColor.AQUA+"<---------------- "+AltsViewer.prefix+" ---------------->");
+        sender.sendMessage(ChatColor.AQUA+"/alts view <player> "+ChatColor.WHITE+"Check player alts");
+        sender.sendMessage(ChatColor.AQUA+"/alts ipview <ip> "+ChatColor.WHITE+"Check accounts with that ip");
+        sender.sendMessage(ChatColor.AQUA+"/alts <player> "+ChatColor.WHITE+"Check player info");
+        sender.sendMessage(ChatColor.AQUA+"/alts reload "+ChatColor.WHITE+" reload config");
+        sender.sendMessage(ChatColor.AQUA+"<-------------------------------->");
     }
 }

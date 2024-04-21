@@ -3,5 +3,9 @@ config:
   #0 means is allowed 1 player per ip
   enable-kick: true
   allowed-alts: 0
+  #If a player with alts joins, send message to all ops in the server
+  join-message: true
+  #If it's false, if an op player joins it won't be sended
+  join-message-op: false
 messages:
   kick-message: ""
