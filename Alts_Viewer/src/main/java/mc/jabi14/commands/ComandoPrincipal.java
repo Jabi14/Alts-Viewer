@@ -23,7 +23,7 @@ public class ComandoPrincipal implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args){
         if(!sender.isOp()) return true;
         if(args.length >=3) helpMenu(sender);
-        else if (args.length == 0) {
+        else if(args.length == 0) {
             sender.sendMessage(AltsViewer.prefix+"Use the command &b/alts help&f to see the commands.");
             return true;
         }
@@ -35,16 +35,16 @@ public class ComandoPrincipal implements CommandExecutor {
             plugin.getMainConfigManager().reloadConfig();
         }
         else if (args[0].equalsIgnoreCase("view")) {
-            if(args[1] == null){
-                sender.sendMessage(AltsViewer.prefix+"Usage: &b/alts view <player>");
-                return true;
-            }
+            if(args[1] == null) sender.sendMessage(AltsViewer.prefix+"Usage: &b/alts view <player>");
             else{
-                List<String> alts = altsManager.getAlts(args[1]);
-                alts.remove(args[1]);
-                if(alts.isEmpty()){
+                List<String> alts = altsManager.getAlts(args[1],false);
+                if(alts == null){
+                    alts = altsManager.getAlts(args[1],true);
+                    if(alts != null) alts.remove(args[1]);
+                }
+                else alts.remove(args[1]);
+                if(alts == null){
                     sender.sendMessage(AltsViewer.prefix+"No alts found");
-                    alts.add(args[1]);
                     return true;
                 }
                 sender.sendMessage(AltsViewer.prefix+"Found "+alts.size()+" alts:");
@@ -52,8 +52,8 @@ public class ComandoPrincipal implements CommandExecutor {
                     sender.sendMessage("- "+nicks);
                 }
                 alts.add(args[1]);
-                return true;
             }
+            return true;
         }
         else{
             for (Player p : Bukkit.getOnlinePlayers()){
@@ -66,7 +66,8 @@ public class ComandoPrincipal implements CommandExecutor {
                     return true;
                 }
             }
-            sender.sendMessage(AltsViewer.prefix+"Player not offline or does not exist");
+            //Poner este mensaje solo si no encuentra ninguno
+            sender.sendMessage(AltsViewer.prefix+"Player offline or does not exist");
         }
         return true;
     }
@@ -74,6 +75,7 @@ public class ComandoPrincipal implements CommandExecutor {
     public void helpMenu(CommandSender sender){
         sender.sendMessage("&b<---------------- "+AltsViewer.prefix+" ---------------->");
         sender.sendMessage("&b/alts view <player> &fCheck player alts");
+        sender.sendMessage("&b/alts view <ip> &fCheck ip alts");
         sender.sendMessage("&b/alts <player> &f Check player info");
         sender.sendMessage("&b/alts reload &f reload config");
         sender.sendMessage("&b<-------------------------------->");

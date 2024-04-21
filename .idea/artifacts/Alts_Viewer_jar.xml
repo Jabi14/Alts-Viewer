@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Alts_Viewer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Alts_Viewer_jar</output-path>
+    <root id="archive" name="Alts_Viewer.jar">
+      <element id="module-output" name="Alts_Viewer" />
+    </root>
+  </artifact>
+</component>

@@ -1,6 +1,7 @@
 config:
+  #If it's enabled, it will kick new accounts not allowed
+  #0 means that only one player can enter with same ip
   enable-kick: true
-  #Put 0 to not allow alts
-  allowed-alts: 2
+  allowed-alts: 0
 messages:
   kick-message: ""
