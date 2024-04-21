@@ -5,4 +5,8 @@ author: Jabi14
 
 commands:
   alts:
+    view:
+      description: View players alts
+      ipview:
+        description: View ip accounts
     description: Main command of altsviewer
